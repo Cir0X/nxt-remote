@@ -1,17 +1,33 @@
 package epro.hbrs.de.nxt_remote;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.zerokol.views.JoystickView;
+import com.zerokol.views.JoystickView;
 
 public class MainActivity extends Activity {
+
+    private Context mContext;
+    private JoystickView joystick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mContext = this;
+        joystick = (JoystickView) findViewById(R.id.joystick_view);
+
+        joystick.setOnJoystickMoveListener(new JoystickView.OnJoystickMoveListener() {
+            @Override
+            public void onValueChanged(int i, int i2, int i3) {
+
+            }
+        }, JoystickView.DEFAULT_LOOP_INTERVAL);
     }
 
 
