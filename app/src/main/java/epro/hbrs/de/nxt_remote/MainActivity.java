@@ -9,10 +9,15 @@ import android.view.MenuItem;
 import com.zerokol.views.JoystickView;
 import com.zerokol.views.JoystickView;
 
+import de.keyboardsurfer.android.widget.crouton.Crouton;
+import de.keyboardsurfer.android.widget.crouton.Style;
+
 public class MainActivity extends Activity {
 
     private Context mContext;
     private JoystickView joystick;
+
+    private boolean bluetoothConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +30,10 @@ public class MainActivity extends Activity {
         joystick.setOnJoystickMoveListener(new JoystickView.OnJoystickMoveListener() {
             @Override
             public void onValueChanged(int i, int i2, int i3) {
-
+                if (!bluetoothConnected) {
+                    Crouton.makeText((Activity) mContext,
+                            getString(R.string.bluetooth_not_connected_alert), Style.ALERT).show();
+                }
             }
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
     }

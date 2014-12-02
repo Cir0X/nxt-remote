@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">nxt-remote</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="bluetooth_not_connected_alert">Not Connected to NXT</string>
 
 </resources>
