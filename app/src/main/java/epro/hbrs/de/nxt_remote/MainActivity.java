@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_connect) {
-            startActivity(new Intent(ConnectActivity.class));
+            startActivity(new Intent(this, ConnectActivity.class));
         } else if (id == R.id.action_settings) {
             return true;
         }
