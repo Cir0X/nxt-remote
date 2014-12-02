@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -30,7 +31,8 @@ public class MainActivity extends Activity {
 
         joystick.setOnJoystickMoveListener(new JoystickView.OnJoystickMoveListener() {
             @Override
-            public void onValueChanged(int i, int i2, int i3) {
+            public void onValueChanged(int angle, int power, int direction) {
+                Log.d("JoyStick", angle + " " + power + " " + direction);
                 if (!bluetoothConnected) {
                     Crouton.makeText((Activity) mContext,
                             getString(R.string.bluetooth_not_connected_alert), Style.ALERT).show();
@@ -39,6 +41,11 @@ public class MainActivity extends Activity {
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Crouton.cancelAllCroutons();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
