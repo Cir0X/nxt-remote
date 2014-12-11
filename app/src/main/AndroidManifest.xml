@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="epro.hbrs.de.nxt_remote.MainActivity"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,6 +23,7 @@
         <activity
             android:name="epro.hbrs.de.nxt_remote.ConnectActivity"
             android:label="@string/title_activity_connect"
+            android:screenOrientation="portrait"
             android:parentActivityName="epro.hbrs.de.nxt_remote.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

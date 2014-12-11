@@ -7,7 +7,6 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -56,15 +54,32 @@ public class MainActivity extends Activity {
         joystick.setOnJoystickMoveListener(new JoystickView.OnJoystickMoveListener() {
             @Override
             public void onValueChanged(int angle, int power, int direction) {
-                Log.d("JoyStick", angle + " " + power + " " + direction);
                 if (!bluetoothConnected) {
                     Crouton.makeText((Activity) mContext,
                             getString(R.string.bluetooth_not_connected_alert), Style.ALERT).show();
                 } else {
-                    send(0, 0);
+                    send((byte) 1, calcLeftDirection(angle, power));
+                    send((byte) 2, calcRightDirection(angle, power));
                 }
             }
         }, JoystickView.DEFAULT_LOOP_INTERVAL);
+    }
+
+    private byte calcRightDirection(int angle, int power) {
+        double x = (power * Math.sin(Math.toRadians(angle)));
+        double y = (power*2.5 * Math.cos(Math.toRadians(angle)));
+        if (x == 0.0 && y == 0.0) {
+
+        }
+        Log.d("XY", "x: " + x + " y: " + y);
+        return (byte) ((x + y) / 2);
+    }
+
+    private byte calcLeftDirection(int angle, int power) {
+        double x = (power * Math.sin(Math.toRadians(angle)));
+        double y = (power*2.5 * Math.cos(Math.toRadians(angle)));
+        Log.d("XY", "x: " + x + " y: " + y);
+        return (byte) ((y - x) / 2);
     }
 
     @Override
@@ -98,22 +113,24 @@ public class MainActivity extends Activity {
         }
     }
 
-    public void send(int motor, int speed) {
+    public void send(byte motor, byte speed) {
         byte[] buffer = new byte[15];
-        buffer[0] = 13; // message length
+        buffer[0] = 13;// message length
         buffer[1] = 0;  //
 
-        buffer[2] = 0; // byte 0
+        buffer[2] = 0x00; // byte 0
         buffer[3] = 0x04;
-        buffer[4] = 2; // engine b = 1   engine c = 2
-        buffer[5] = 100; // speed range: -100 - 100
+        buffer[4] = motor; // engine b = 1   engine c = 2
+        buffer[5] = speed; // speed range: -100 - 100
 
         buffer[6] = 1; //
-        buffer[9] = 1;
+        buffer[7] = 0;
+        buffer[8] = 0;
+        buffer[9] = 0x20;
         try {
-            Log.d("send", "" + buffer);
+            Log.d("send", "" + buffer[0]);
             bluetoothOutputStream.write(buffer);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
