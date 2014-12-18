@@ -14,6 +14,7 @@ import java.util.List;
 import de.keyboardsurfer.android.widget.crouton.Crouton;
 import de.keyboardsurfer.android.widget.crouton.Style;
 import epro.hbrs.de.nxt_remote.R;
+import epro.hbrs.de.nxt_remote.base.Preferences;
 
 
 public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecyclerViewAdapter.ViewHolder> {
@@ -40,7 +41,9 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         viewHolder.deviceCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Preferences.save(mContext, "SelectedDevicePosition", "" + position);
                 Crouton.makeText((Activity) mContext, "Device " + devices.get(position) + " selected", Style.CONFIRM).show();
+                ((Activity) mContext).finish();
             }
         });
     }
