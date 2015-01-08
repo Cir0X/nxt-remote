@@ -1,11 +1,13 @@
 package epro.hbrs.de.nxt_remote;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -91,7 +93,8 @@ public class MainActivity extends Activity {
         String position = Preferences.get(mContext, "SelectedDevicePosition");
         if (position != "EMPTY") {
             selectedDevicePosition = Integer.parseInt(position);
-            connectToDevice(pairedDevices.get(selectedDevicePosition));
+//            connectToDevice(pairedDevices.get(selectedDevicePosition));
+            new BluetoothAsyncTask().execute();
         }
     }
 
@@ -121,6 +124,13 @@ public class MainActivity extends Activity {
         Crouton.cancelAllCroutons();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Preferences.save(mContext, "SelectedDevicePosition", "" + "EMPTY");
+        disconnect();
+    }
+
     private void getPairedBluetoothDevices() {
         pairedDevices = new ArrayList<BluetoothDevice>();
         devices = new ArrayList<String>();
@@ -130,7 +140,7 @@ public class MainActivity extends Activity {
         } else {
             pairedDevices.addAll(bluetoothAdapter.getBondedDevices());
 
-            // Add device names to devies list
+            // Add device names to devices list
             for (BluetoothDevice device : pairedDevices) {
                 devices.add(device.getName());
 //                bluetoothDevice = device;
@@ -149,8 +159,17 @@ public class MainActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Crouton.makeText((Activity) mContext, "Connected to Device", Style.CONFIRM).show();
+        Crouton.makeText((Activity) mContext, getString(R.string.connection_established), Style.CONFIRM).show();
         bluetoothConnected = true;
+    }
+
+    private void disconnect() {
+        try {
+            bluetoothInputStream.close();
+            bluetoothConnected = false;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void send(byte motor, byte speed) {
@@ -195,9 +214,35 @@ public class MainActivity extends Activity {
             Intent intent = new Intent(this, ConnectActivity.class);
             intent.putExtras(bundle);
             startActivity(intent);
+        } else if(id == R.id.action_disconnect) {
+            disconnect();
         } else if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private class BluetoothAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setMessage(getString(R.string.connecting));
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            connectToDevice(pairedDevices.get(selectedDevicePosition));
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            progressDialog.dismiss();
+        }
+    }
+
 }

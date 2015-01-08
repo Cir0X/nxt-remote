@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">nxt-remote</string>
+    <string name="action_connect">Verbinden</string>
+    <string name="action_disconnect">Trennen</string>
+    <string name="connecting">Verbinden</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="bluetooth_not_connected_alert">Nicht mit dem NXT verbunden</string>
+    <string name="bluetooth_not_supported">Der Gerät unterstützt kein Bluetooth</string>
+    <string name="title_activity_connect">Verbinden</string>
+    <string name="connection_established">Verbindung hergestellt</string>
+
+</resources>

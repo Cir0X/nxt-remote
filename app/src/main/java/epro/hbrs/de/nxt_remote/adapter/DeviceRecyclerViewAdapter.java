@@ -1,6 +1,7 @@
 package epro.hbrs.de.nxt_remote.adapter;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -41,8 +42,11 @@ public class DeviceRecyclerViewAdapter extends RecyclerView.Adapter<DeviceRecycl
         viewHolder.deviceCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog pd = new ProgressDialog(mContext);
+                pd.setMessage(mContext.getString(R.string.connecting));
                 Preferences.save(mContext, "SelectedDevicePosition", "" + position);
-                Crouton.makeText((Activity) mContext, "Device " + devices.get(position) + " selected", Style.CONFIRM).show();
+//                Crouton.makeText((Activity) mContext, "Device " + devices.get(position) + " selected", Style.CONFIRM).show();
+                pd.dismiss();
                 ((Activity) mContext).finish();
             }
         });

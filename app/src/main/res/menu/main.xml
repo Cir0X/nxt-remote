@@ -6,6 +6,11 @@
         android:title="@string/action_connect"
         android:showAsAction="always" />
 
+    <item android:id="@+id/action_disconnect"
+        android:title="@string/action_disconnect"
+        android:showAsAction="always" />
+
+
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
